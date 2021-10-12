@@ -20,11 +20,16 @@ const int vHeight = 500;    // Viewport height in pixels
 float robotBodyWidth = 8.0;
 float robotBodyLength = 24.0;
 float robotBodyDepth = 8.0;
-float headWidth = 0.4*robotBodyWidth;
-float headLength = headWidth;
-float headDepth = headWidth;
+float headWidth = 0.7*robotBodyWidth;
+float headLength = 0.4 * robotBodyWidth;
+float headDepth = 0.7 * robotBodyWidth;
+float turretBaseWidth = headWidth / 2;
+float turretBaseLength = headLength / 2;
+float turretBaseDepth = headDepth / 2;
 float upperArmLength = robotBodyLength/1.5;
 float upperArmWidth = 0.125*robotBodyWidth;
+float turretLength = upperArmLength / 3;
+float turretWidth = upperArmWidth;
 float gunLength = upperArmLength / 4.0;
 float gunWidth = upperArmWidth;
 float gunDepth = upperArmWidth;
@@ -111,6 +116,9 @@ void drawLowerBody();
 void drawLeftArm();
 void drawRightArm();
 void drawWheel();
+void drawTurretBase();
+void drawTurret();
+void drawSensor();
 
 int main(int argc, char **argv)
 {
@@ -231,8 +239,10 @@ void drawRobot()
 	 //glRotatef(robotAngle, 0.0, 1.0, 0.0);
 
 	 //drawBody();
+	//drawLeftArm();
+	drawTurret();
+	drawTurretBase();
 	drawHead();
-	 //drawLeftArm();
 	drawRightArm();
 	drawWheel();
 	glPopMatrix();
@@ -272,7 +282,7 @@ void drawHead()
 	
 	// Build Head
 	glPushMatrix();
-	glScalef(0.7*robotBodyWidth, 0.4*robotBodyWidth, 0.7*robotBodyWidth);
+	glScalef(headWidth, headLength, headDepth);
 	glutSolidCube(1.0);
 	glPopMatrix();
 
@@ -328,6 +338,61 @@ void drawWheel() {
 	glPopMatrix();
 
 	glPopMatrix();
+}
+
+void drawTurretBase() {
+	// Set robot material properties per body part. Can have seperate material properties for each part
+	glMaterialfv(GL_FRONT, GL_AMBIENT, robotBody_mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, robotBody_mat_specular);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotBody_mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, robotBody_mat_shininess);
+
+	glPushMatrix();
+	// Position turrets base with respect to the head
+	glTranslatef(-(upperArmWidth), 0.0, 0.0); // this will be done last
+	glTranslatef(0, 0.5 * upperArmLength + 0.5 * headLength - 0.5 * turretBaseLength, 0); 
+
+	// Build Head
+	glPushMatrix();
+	glScalef(turretBaseWidth, turretBaseLength, turretBaseDepth);
+	glutSolidCube(1.0);
+	glPopMatrix();
+
+	glPopMatrix();
+}
+
+void drawTurret()
+{
+	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, robotArm_mat_shininess);
+
+	glPushMatrix();
+
+	// Rotate arm at shoulder
+	/*
+	glTranslatef(-(0.5*robotBodyWidth + 0.5*upperArmWidth), 0.5*upperArmLength, 0.0);
+	glRotatef(shoulderAngle, 1.0, 0.0, 0.0);
+	glTranslatef((0.5*robotBodyWidth + 0.5*upperArmWidth), -0.5*upperArmLength, 0.0);
+	*/
+
+	//position arm down with respect to the wheel
+	//glTranslatef(0.0, -(0.5 * wheelInternalRadius), 0.0);
+	// Position turret with respect to the robot, attaching it to turrets base
+	glTranslatef(0.0, 0.0, turretLength);
+	glTranslatef(-(upperArmWidth), 0.5 * upperArmLength + 0.5*turretWidth, 0);
+	glRotatef(90.0, 1.0, 0.0, 0.0); //rotate to face gun forward.
+
+	// build arm
+	glPushMatrix();
+	glScalef(turretWidth, turretLength, turretWidth);
+	glutSolidCube(1.0);
+	glPopMatrix();
+
+	glPopMatrix();
+
+
 }
 
 void drawLeftArm()
