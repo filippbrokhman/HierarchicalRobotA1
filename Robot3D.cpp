@@ -23,6 +23,8 @@ float robotBodyDepth = 8.0;
 float headWidth = 0.7*robotBodyWidth;
 float headLength = 0.4 * robotBodyWidth;
 float headDepth = 0.7 * robotBodyWidth;
+float innerRadiusSensor = headLength * 0.104;
+float outerRadiusSensor = headLength * 0.27;
 float turretBaseWidth = headWidth / 2;
 float turretBaseLength = headLength / 2;
 float turretBaseDepth = headDepth / 2;
@@ -242,6 +244,7 @@ void drawRobot()
 	//drawLeftArm();
 	drawTurret();
 	drawTurretBase();
+	drawSensor();
 	drawHead();
 	drawRightArm();
 	drawWheel();
@@ -277,8 +280,8 @@ void drawHead()
 
 	glPushMatrix();
 	// Position head with respect to arm
-	glTranslatef(-(upperArmWidth),0.0,0.0);
-	glTranslatef(0, 0.5*upperArmLength-0.5*headLength, 0); // this will be done last
+	glTranslatef(-(upperArmWidth),0.0,0.0);// this will be done last
+	glTranslatef(0, 0.5*upperArmLength-0.5*headLength, 0); 
 	
 	// Build Head
 	glPushMatrix();
@@ -393,6 +396,21 @@ void drawTurret()
 	glPopMatrix();
 
 
+}
+
+void drawSensor() {
+	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, robotArm_mat_shininess);
+
+	glPushMatrix();
+
+	
+	glTranslatef(-(upperArmWidth), 0.5 * upperArmLength - 0.5 * headLength, headDepth);
+	glutSolidTorus(innerRadiusSensor,outerRadiusSensor,4,60);
+
+	glPopMatrix();
 }
 
 void drawLeftArm()
