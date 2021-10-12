@@ -121,6 +121,8 @@ void drawWheel();
 void drawTurretBase();
 void drawTurret();
 void drawSensor();
+void drawLeftCap();
+void drawRightCap();
 
 int main(int argc, char **argv)
 {
@@ -238,7 +240,7 @@ void drawRobot()
 {
 	glPushMatrix();
 	 // spin robot on base. 
-	 //glRotatef(robotAngle, 0.0, 1.0, 0.0);
+	 glRotatef(robotAngle, 0.0, 1.0, 0.0);
 
 	 //drawBody();
 	//drawLeftArm();
@@ -247,6 +249,8 @@ void drawRobot()
 	drawSensor();
 	drawHead();
 	drawRightArm();
+	drawRightCap();
+	drawLeftCap();
 	drawWheel();
 	glPopMatrix();
 	
@@ -343,6 +347,44 @@ void drawWheel() {
 	glPopMatrix();
 }
 
+void drawLeftCap() {
+	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, robotArm_mat_shininess);
+
+	glPushMatrix();
+	// Position cap with respect to parent (wheel)
+	glTranslatef(0.5 * robotBodyWidth, -0.5 * robotBodyLength, 0); // this will be done last
+
+	// cap
+	glPushMatrix();
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	gluDisk(gluNewQuadric(), 0, wheelInternalRadius, 40, 40);
+	glPopMatrix();
+
+	glPopMatrix();
+}
+
+void drawRightCap() {
+	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, robotArm_mat_shininess);
+
+	glPushMatrix();
+	// Position cap with respect to parent (wheel)
+	glTranslatef(-(0.5 * robotBodyWidth), -0.5 * robotBodyLength, 0); // this will be done last
+
+	// cap
+	glPushMatrix();
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	gluDisk(gluNewQuadric(), 0, wheelInternalRadius, 40, 40);
+	glPopMatrix();
+
+	glPopMatrix();
+}
+
 void drawTurretBase() {
 	// Set robot material properties per body part. Can have seperate material properties for each part
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotBody_mat_ambient);
@@ -383,7 +425,7 @@ void drawTurret()
 	//position arm down with respect to the wheel
 	//glTranslatef(0.0, -(0.5 * wheelInternalRadius), 0.0);
 	// Position turret with respect to the robot, attaching it to turrets base
-	glTranslatef(0.0, 0.0, turretLength);
+	glTranslatef(0.0, 0.0, 0.5*turretLength);
 	glTranslatef(-(upperArmWidth), 0.5 * upperArmLength + 0.5*turretWidth, 0);
 	glRotatef(90.0, 1.0, 0.0, 0.0); //rotate to face gun forward.
 
@@ -407,7 +449,7 @@ void drawSensor() {
 	glPushMatrix();
 
 	
-	glTranslatef(-(upperArmWidth), 0.5 * upperArmLength - 0.5 * headLength, headDepth);
+	glTranslatef(-(upperArmWidth), 0.5 * upperArmLength - 0.5 * headLength, 0.5*headDepth);
 	glutSolidTorus(innerRadiusSensor,outerRadiusSensor,4,60);
 
 	glPopMatrix();
