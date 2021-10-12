@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/HierarchicalRobotA1/.vs/HierarchicalRobotA1/v16
+/HierarchicalRobotA1/Debug
+/HierarchicalRobotA1/HierarchicalRobotA1.vcxproj.user
+/HierarchicalRobotA1/HierarchicalRobotA1.vcxproj.filters
+/.vs
