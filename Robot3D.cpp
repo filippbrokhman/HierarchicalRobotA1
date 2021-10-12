@@ -18,12 +18,12 @@ const int vHeight = 500;    // Viewport height in pixels
 // Note how everything depends on robot body dimensions so that can scale entire robot proportionately
 // just by changing robot body scale
 float robotBodyWidth = 8.0;
-float robotBodyLength = 10.0;
-float robotBodyDepth = 6.0;
+float robotBodyLength = 24.0;
+float robotBodyDepth = 8.0;
 float headWidth = 0.4*robotBodyWidth;
 float headLength = headWidth;
 float headDepth = headWidth;
-float upperArmLength = robotBodyLength;
+float upperArmLength = robotBodyLength/1.5;
 float upperArmWidth = 0.125*robotBodyWidth;
 float gunLength = upperArmLength / 4.0;
 float gunWidth = upperArmWidth;
@@ -32,6 +32,8 @@ float stanchionLength = robotBodyLength;
 float stanchionRadius = 0.1*robotBodyDepth;
 float baseWidth = 2 * robotBodyWidth;
 float baseLength = 0.25*stanchionLength;
+float wheelInternalRadius = robotBodyLength / 6;
+float wheelInternalLength = robotBodyWidth;
 
 // Control Robot body rotation on base
 float robotAngle = 0.0;
@@ -108,6 +110,7 @@ void drawHead();
 void drawLowerBody();
 void drawLeftArm();
 void drawRightArm();
+void drawWheel();
 
 int main(int argc, char **argv)
 {
@@ -225,16 +228,17 @@ void drawRobot()
 {
 	glPushMatrix();
 	 // spin robot on base. 
-	 glRotatef(robotAngle, 0.0, 1.0, 0.0);
+	 //glRotatef(robotAngle, 0.0, 1.0, 0.0);
 
-	 drawBody();
-	 drawHead();
-	 drawLeftArm();
-	 drawRightArm();
+	 //drawBody();
+	drawHead();
+	 //drawLeftArm();
+	drawRightArm();
+	drawWheel();
 	glPopMatrix();
 	
 	// don't want to spin fixed base
-	drawLowerBody();
+	//drawLowerBody();
 
 	glPopMatrix();
 }
@@ -262,12 +266,13 @@ void drawHead()
 	glMaterialfv(GL_FRONT, GL_SHININESS, robotBody_mat_shininess);
 
 	glPushMatrix();
-	// Position head with respect to parent (body)
-	glTranslatef(0, 0.5*robotBodyLength+0.5*headLength, 0); // this will be done last
+	// Position head with respect to arm
+	glTranslatef(-(upperArmWidth),0.0,0.0);
+	glTranslatef(0, 0.5*upperArmLength-0.5*headLength, 0); // this will be done last
 	
 	// Build Head
 	glPushMatrix();
-	glScalef(0.4*robotBodyWidth, 0.4*robotBodyWidth, 0.4*robotBodyWidth);
+	glScalef(0.7*robotBodyWidth, 0.4*robotBodyWidth, 0.7*robotBodyWidth);
 	glutSolidCube(1.0);
 	glPopMatrix();
 
@@ -305,6 +310,26 @@ void drawLowerBody()
 	glPopMatrix();
 }
 
+void drawWheel() {
+	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, robotArm_mat_shininess);
+
+	glPushMatrix();
+	// Position wheel with respect to parent (robot)
+	glTranslatef(0.5*robotBodyWidth, -0.5 * robotBodyLength, 0); // this will be done last
+
+	// wheel
+	glPushMatrix();
+	glScalef(wheelInternalLength, wheelInternalRadius, wheelInternalRadius);
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	gluCylinder(gluNewQuadric(), 1.0, 1.0, 1.0, 20, 10);
+	glPopMatrix();
+
+	glPopMatrix();
+}
+
 void drawLeftArm()
 {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
@@ -335,12 +360,16 @@ void drawRightArm()
 	glPushMatrix();
 
 	// Rotate arm at shoulder
+	/*
 	glTranslatef(-(0.5*robotBodyWidth + 0.5*upperArmWidth), 0.5*upperArmLength, 0.0);
 	glRotatef(shoulderAngle, 1.0, 0.0, 0.0);
 	glTranslatef((0.5*robotBodyWidth + 0.5*upperArmWidth), -0.5*upperArmLength, 0.0);
+	*/
 
-	// Position arm and gun with respect to parent body
-	glTranslatef(-(0.5*robotBodyWidth + 0.5*upperArmWidth), 0, 0.0);
+	//position arm down with respect to the wheel
+	glTranslatef(0.0,-(0.5*wheelInternalRadius),0.0);
+	// Position arm with respect to the robot
+	glTranslatef(-(0.5*robotBodyWidth + 0.5 * upperArmWidth), 0, 0.0);
 	
 	// build arm
 	glPushMatrix();
@@ -349,6 +378,7 @@ void drawRightArm()
 	glPopMatrix();
 
 	//  Gun
+	/*
 	glMaterialfv(GL_FRONT, GL_AMBIENT, gun_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, gun_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, gun_mat_diffuse);
@@ -367,7 +397,7 @@ void drawRightArm()
 	glScalef(gunWidth, gunLength, gunDepth);
 	glutSolidCube(1.0);
 	glPopMatrix();
-
+	*/
 	glPopMatrix();
 
 
