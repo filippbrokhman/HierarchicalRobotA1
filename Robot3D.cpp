@@ -12,6 +12,8 @@
 #include "cube.h"
 #include "QuadMesh.h"
 
+#define M_PI       3.14159265358979323846   // pi
+
 const int vWidth  = 650;    // Viewport width in pixels
 const int vHeight = 500;    // Viewport height in pixels
 
@@ -48,6 +50,15 @@ float robotAngle = 0.0;
 // Control arm rotation
 float shoulderAngle = -40.0;
 float gunAngle = -25.0;
+float headAngle = 0.0;
+float maxHeadAngleUp = -40;
+float maxHeadAngleDown = 20;
+
+// movement of robot
+float movementPositionX = 0.0;
+float movementPositionZ = 0.0; 
+float deltaPositionX = 0.0;
+float deltaPositionZ = 0.0;
 
 // Spin Cube Mesh
 float cubeAngle = 0.0;
@@ -240,6 +251,7 @@ void drawRobot()
 {
 	glPushMatrix();
 	 // spin robot on base. 
+	 glTranslatef(movementPositionX, 0.0, movementPositionZ);
 	 glRotatef(robotAngle, 0.0, 1.0, 0.0);
 
 	 //drawBody();
@@ -275,6 +287,9 @@ void drawHead()
 	// Position head with respect to arm
 	glTranslatef(-(upperArmWidth),0.0,0.0);// this will be done last
 	glTranslatef(0, 0.5*upperArmLength-0.5*headLength, 0); 
+
+	// rotate head
+	glRotatef(headAngle, 1.0, 0.0, 0.0);
 
 	drawTurretBase();
 	drawSensor();
@@ -550,22 +565,24 @@ void keyboard(unsigned char key, int x, int y)
 		robotAngle -= 2.0;
 		break;
 	case 'a':
-		shoulderAngle += 2.0;
+		if (headAngle < maxHeadAngleDown)
+			headAngle += 2.0;
 		break;
 	case 'A':
-		shoulderAngle -= 2.0;
+		if (headAngle > maxHeadAngleUp)
+			headAngle -= 2.0;
 		break;
-	case 'g':
-		gunAngle += 2.0;
-		break;
-	case 'G':
-		gunAngle -= 2.0;
+	case 'w':
+		deltaPositionX = 2.0 * sin(robotAngle * M_PI / 180.0);
+		deltaPositionZ = 2.0 * cos(robotAngle * M_PI / 180.0);
+		movementPositionX += deltaPositionX;
+		movementPositionZ += deltaPositionZ;
 		break;
 	case 's':
-		glutTimerFunc(10, animationHandler, 0);
-		break;
-	case 'S':
-		stop = true;
+		deltaPositionX = 2.0 * sin(robotAngle * M_PI / 180.0);
+		deltaPositionZ = 2.0 * cos(robotAngle * M_PI / 180.0);
+		movementPositionX -= deltaPositionX;
+		movementPositionZ -= deltaPositionZ;
 		break;
 	}
 
