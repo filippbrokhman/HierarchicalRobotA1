@@ -20,6 +20,7 @@ const int vHeight = 500;    // Viewport height in pixels
 
 // Note how everything depends on robot body dimensions so that can scale entire robot proportionately
 // just by changing robot body scale
+//all robot dimensions
 float robotBodyWidth = 8.0;
 float robotBodyLength = 24.0;
 float robotBodyDepth = 8.0;
@@ -252,13 +253,13 @@ void display(void)
 
 void drawRobot()
 {
+	//draws the robot with respect to keyboard commands
 	glPushMatrix();
 	 // spin robot on base. 
 	 glTranslatef(movementPositionX, 0.0, movementPositionZ);
 	 glRotatef(robotAngle, 0.0, 1.0, 0.0);
 
-	 //drawBody();
-	//drawLeftArm();
+	//draw the robot
 	drawHead();
 	drawRightArm();
 	drawWheel();
@@ -273,6 +274,7 @@ void drawRobot()
 
 void drawBody()
 {
+	//part of skeleton code, unused in final product
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotBody_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotBody_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotBody_mat_diffuse);
@@ -291,9 +293,10 @@ void drawHead()
 	glTranslatef(-(upperArmWidth),0.0,0.0);// this will be done last
 	glTranslatef(0, 0.5*upperArmLength-0.5*headLength, 0); 
 
-	// rotate head
+	// rotate head according to keyboard commands
 	glRotatef(headAngle, 1.0, 0.0, 0.0);
 
+	//draws next two components with respect to itself, necessary for aiming turret.
 	drawTurretBase();
 	drawSensor();
 
@@ -314,6 +317,7 @@ void drawHead()
 
 void drawLowerBody()
 {
+	//part of skeleton code, unused in final product.
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotLowerBody_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotLowerBody_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotLowerBody_mat_diffuse);
@@ -344,6 +348,7 @@ void drawLowerBody()
 }
 
 void drawTireCube() {
+	//draws a tire that goes on the wheel to help show it rotating as the robot moves
 	glPushMatrix();
 	glTranslatef(-(0.5 * wheelInternalLength + 0.5), 0.5 * wheelInternalLength + 0.5, 0);
 	glutSolidCube(1.0);
@@ -351,6 +356,7 @@ void drawTireCube() {
 }
 
 void drawWheel() {
+	//draws wheel and all components necessary such as the caps to make the wheel solid and the "tire" cube
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
@@ -361,11 +367,12 @@ void drawWheel() {
 	glTranslatef(0.5*robotBodyWidth, -0.5 * robotBodyLength, 0); // this will be done last
 	glRotatef(wheelTurn, 1, 0, 0);
 
+	//draws all components based around itself.
 	drawRightCap();
 	drawLeftCap();
 	drawTireCube();
 
-	// wheel
+	// draws wheel
 	glPushMatrix();
 	glScalef(wheelInternalLength, wheelInternalRadius, wheelInternalRadius);
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
@@ -380,7 +387,7 @@ void drawLeftCap() {
 	// Position cap with respect to parent (wheel)
 	glTranslatef(-wheelInternalLength, 0, 0); // this will be done last
 
-	// cap
+	// draws and rotates left cap
 	glPushMatrix();
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
 	gluDisk(gluNewQuadric(), 0, wheelInternalRadius, 40, 40);
@@ -392,9 +399,8 @@ void drawLeftCap() {
 void drawRightCap() {
 	glPushMatrix();
 	// Position cap with respect to parent (wheel)
-	//glTranslatef(wheelInternalLength, 0, 0); // this will be done last
 
-	// cap
+	// draws and rotates right cap
 	glPushMatrix();
 	glRotatef(90.0, 0.0, 1.0, 0.0);
 	gluDisk(gluNewQuadric(), 0, wheelInternalRadius, 40, 40);
@@ -404,9 +410,9 @@ void drawRightCap() {
 }
 
 void drawTurretBase() {
+	//draws the base of the turret as well as the turret barrel itself.
 	glPushMatrix();
 	// Position turrets base with respect to the head
-	//glTranslatef(-(upperArmWidth), 0.0, 0.0); // this will be done last
 	glTranslatef(0, 0.5 * headLength + 0.5 * turretBaseLength, 0); 
 
 	drawTurret();
@@ -422,6 +428,7 @@ void drawTurretBase() {
 
 void drawTurret()
 {
+	//draws the barrel of the turret
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
@@ -429,21 +436,11 @@ void drawTurret()
 
 	glPushMatrix();
 
-	// Rotate arm at shoulder
-	/*
-	glTranslatef(-(0.5*robotBodyWidth + 0.5*upperArmWidth), 0.5*upperArmLength, 0.0);
-	glRotatef(shoulderAngle, 1.0, 0.0, 0.0);
-	glTranslatef((0.5*robotBodyWidth + 0.5*upperArmWidth), -0.5*upperArmLength, 0.0);
-	*/
-
-	//position arm down with respect to the wheel
-	//glTranslatef(0.0, -(0.5 * wheelInternalRadius), 0.0);
-	// Position turret with respect to the robot, attaching it to turrets base
+	// Position turret with respect to the turret base, attaching it to turrets base
 	glTranslatef(0.0, 0.0, 0.5*turretLength);
-	//glTranslatef(-(upperArmWidth), 0.5 * upperArmLength + 0.5*turretWidth, 0);
 	glRotatef(90.0, 1.0, 0.0, 0.0); //rotate to face gun forward.
 
-	// build arm
+	// build turret barrel
 	glPushMatrix();
 	glScalef(turretWidth, turretLength, turretWidth);
 	glutSolidCube(1.0);
@@ -455,6 +452,7 @@ void drawTurret()
 }
 
 void drawSensor() {
+	//draws a taurus object that looks like a camera lens/sensor for the front of the head
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
@@ -462,7 +460,7 @@ void drawSensor() {
 
 	glPushMatrix();
 
-	
+	//sensor is drawn and move with respect to the head
 	glTranslatef(0, 0, 0.5*headDepth);
 	glutSolidTorus(innerRadiusSensor,outerRadiusSensor,4,60);
 
@@ -471,6 +469,7 @@ void drawSensor() {
 
 void drawLeftArm()
 {
+	//part of skeleton code, unused in final product
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
@@ -491,6 +490,7 @@ void drawLeftArm()
 
 void drawRightArm()
 {
+	// builds the arm that connects the head to the wheel
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, robotArm_mat_diffuse);
@@ -498,12 +498,6 @@ void drawRightArm()
 
 	glPushMatrix();
 
-	// Rotate arm at shoulder
-	/*
-	glTranslatef(-(0.5*robotBodyWidth + 0.5*upperArmWidth), 0.5*upperArmLength, 0.0);
-	glRotatef(shoulderAngle, 1.0, 0.0, 0.0);
-	glTranslatef((0.5*robotBodyWidth + 0.5*upperArmWidth), -0.5*upperArmLength, 0.0);
-	*/
 
 	//position arm down with respect to the wheel
 	glTranslatef(0.0,-(0.5*wheelInternalRadius),0.0);
@@ -516,27 +510,6 @@ void drawRightArm()
 	glutSolidCube(1.0);
 	glPopMatrix();
 
-	//  Gun
-	/*
-	glMaterialfv(GL_FRONT, GL_AMBIENT, gun_mat_ambient);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, gun_mat_specular);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, gun_mat_diffuse);
-	glMaterialfv(GL_FRONT, GL_SHININESS, gun_mat_shininess);
-
-	glPushMatrix();
-	// rotate gun
-	glTranslatef(-(0.5*robotBodyWidth + 0.5*upperArmWidth), -(0.5*upperArmLength), 0.0);
-	glRotatef(gunAngle, 1.0, 0.0, 0.0);
-	glTranslatef((0.5*robotBodyWidth + 0.5*upperArmWidth), (0.5*upperArmLength ), 0.0);
-	
-	// Position gun with respect to parent arm 
-	glTranslatef(0, -(0.5*upperArmLength + 0.5*gunLength), 0.0);
-
-	// build gun
-	glScalef(gunWidth, gunLength, gunDepth);
-	glutSolidCube(1.0);
-	glPopMatrix();
-	*/
 	glPopMatrix();
 
 
@@ -577,23 +550,28 @@ void keyboard(unsigned char key, int x, int y)
 		glutTimerFunc(10, animationHandler, 0);
 		break;
 	case 't':
-		
+		//breaks inputs
 		break;
 	case 'r':
+		//turn robot left
 		robotAngle += 2.0;
 		break;
 	case 'R':
+		//turn robot right
 		robotAngle -= 2.0;
 		break;
 	case 'a':
+		//aim turret up
 		if (headAngle < maxHeadAngleDown)
 			headAngle += 2.0;
 		break;
 	case 'A':
+		//aim turret down
 		if (headAngle > maxHeadAngleUp)
 			headAngle -= 2.0;
 		break;
 	case 'w':
+		// move robot forward
 		deltaPositionX = 2.0 * sin(robotAngle * M_PI / 180.0);
 		deltaPositionZ = 2.0 * cos(robotAngle * M_PI / 180.0);
 		movementPositionX += deltaPositionX;
@@ -601,6 +579,7 @@ void keyboard(unsigned char key, int x, int y)
 		wheelTurn += 20;
 		break;
 	case 's':
+		// move robot backwards
 		deltaPositionX = 2.0 * sin(robotAngle * M_PI / 180.0);
 		deltaPositionZ = 2.0 * cos(robotAngle * M_PI / 180.0);
 		movementPositionX -= deltaPositionX;
@@ -617,8 +596,7 @@ void animationHandler(int param)
 {
 	if (!stop)
 	{
-		//shoulderAngle += 1.0;
-		//cubeAngle += 2.0;
+		//recursive function that allows robot to move forward automatically with respect to inputs
 		deltaPositionX = 0.125 * sin(robotAngle * M_PI / 180.0);
 		deltaPositionZ = 0.125 * cos(robotAngle * M_PI / 180.0);
 		movementPositionX += deltaPositionX;
