@@ -566,8 +566,30 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
+	case 'h':
+		printf("controls are:");
+		printf("q for auto-move forward;\n");
+		printf("e to stop auto-move forward;\n");
+		printf("t to break;\n");
+		printf("r to rotate robot right;\n");
+		printf("R to rotate robot left;\n");
+		printf("a to aim turret up;\n");
+		printf("A to aim turret down;\n");
+		printf("w to move robot forward;\n");
+		printf("s to move robot backwards;\n");
+		printf("press h again to look at the controls once more.");
+		break;
+	case 'e':
+		//stop moving forward
+		stop = true;
+		break;
+	case 'q':
+		//auto-move forward
+		stop = false;
+		glutTimerFunc(10, animationHandler, 0);
+		break;
 	case 't':
-
+		
 		break;
 	case 'r':
 		robotAngle += 2.0;
@@ -607,8 +629,13 @@ void animationHandler(int param)
 {
 	if (!stop)
 	{
-		shoulderAngle += 1.0;
-		cubeAngle += 2.0;
+		//shoulderAngle += 1.0;
+		//cubeAngle += 2.0;
+		deltaPositionX = 0.125 * sin(robotAngle * M_PI / 180.0);
+		deltaPositionZ = 0.125 * cos(robotAngle * M_PI / 180.0);
+		movementPositionX += deltaPositionX;
+		movementPositionZ += deltaPositionZ;
+		wheelTurn += 1;
 		glutPostRedisplay();
 		glutTimerFunc(10, animationHandler, 0);
 	}
