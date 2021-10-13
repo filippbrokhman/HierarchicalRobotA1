@@ -12,6 +12,7 @@
 #include "cube.h"
 #include "QuadMesh.h"
 
+
 #define M_PI       3.14159265358979323846   // pi
 
 const int vWidth  = 650;    // Viewport width in pixels
@@ -566,19 +567,6 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	case 'h':
-		printf("controls are:");
-		printf("q for auto-move forward;\n");
-		printf("e to stop auto-move forward;\n");
-		printf("t to break;\n");
-		printf("r to rotate robot right;\n");
-		printf("R to rotate robot left;\n");
-		printf("a to aim turret up;\n");
-		printf("A to aim turret down;\n");
-		printf("w to move robot forward;\n");
-		printf("s to move robot backwards;\n");
-		printf("press h again to look at the controls once more.");
-		break;
 	case 'e':
 		//stop moving forward
 		stop = true;
@@ -649,7 +637,17 @@ void functionKeys(int key, int x, int y)
 	// Help key
 	if (key == GLUT_KEY_F1)
 	{
-
+		printf("controls are:\n");
+		printf("q for auto-move forward;\n");
+		printf("e to stop auto-move forward;\n");
+		printf("t to break;\n");
+		printf("r to rotate robot right;\n");
+		printf("R to rotate robot left;\n");
+		printf("a to aim turret up;\n");
+		printf("A to aim turret down;\n");
+		printf("w to move robot forward;\n");
+		printf("s to move robot backwards;\n");
+		printf("press F1 again to look at the controls once more.");
 	}
 	// Do transformations with arrow keys
 	//else if (...)   // GLUT_KEY_DOWN, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_LEFT
