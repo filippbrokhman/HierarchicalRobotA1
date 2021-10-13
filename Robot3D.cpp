@@ -46,6 +46,7 @@ float wheelInternalLength = robotBodyWidth;
 
 // Control Robot body rotation on base
 float robotAngle = 0.0;
+float wheelTurn = 0.0;
 
 // Control arm rotation
 float shoulderAngle = -40.0;
@@ -129,6 +130,7 @@ void drawLowerBody();
 void drawLeftArm();
 void drawRightArm();
 void drawWheel();
+void drawTireCube();
 void drawTurretBase();
 void drawTurret();
 void drawSensor();
@@ -340,6 +342,13 @@ void drawLowerBody()
 	glPopMatrix();
 }
 
+void drawTireCube() {
+	glPushMatrix();
+	glTranslatef(-(0.5 * wheelInternalLength + 0.5), 0.5 * wheelInternalLength + 0.5, 0);
+	glutSolidCube(1.0);
+	glPopMatrix();
+}
+
 void drawWheel() {
 	glMaterialfv(GL_FRONT, GL_AMBIENT, robotArm_mat_ambient);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, robotArm_mat_specular);
@@ -349,9 +358,11 @@ void drawWheel() {
 	glPushMatrix();
 	// Position wheel with respect to parent (robot)
 	glTranslatef(0.5*robotBodyWidth, -0.5 * robotBodyLength, 0); // this will be done last
+	glRotatef(wheelTurn, 1, 0, 0);
 
 	drawRightCap();
 	drawLeftCap();
+	drawTireCube();
 
 	// wheel
 	glPushMatrix();
@@ -577,12 +588,14 @@ void keyboard(unsigned char key, int x, int y)
 		deltaPositionZ = 2.0 * cos(robotAngle * M_PI / 180.0);
 		movementPositionX += deltaPositionX;
 		movementPositionZ += deltaPositionZ;
+		wheelTurn += 20;
 		break;
 	case 's':
 		deltaPositionX = 2.0 * sin(robotAngle * M_PI / 180.0);
 		deltaPositionZ = 2.0 * cos(robotAngle * M_PI / 180.0);
 		movementPositionX -= deltaPositionX;
 		movementPositionZ -= deltaPositionZ;
+		wheelTurn -= 20;
 		break;
 	}
 
